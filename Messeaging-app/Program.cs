@@ -31,12 +31,18 @@ namespace Messeaging_app
             string messeage = Console.ReadLine();
             byte[] data = Encoding.ASCII.GetBytes(messeage);
             udpClient.Send(data, data.Length, ipAddress, recieverPort);
+            pleaseLoopThis = true;
         }
 
         private static void startConnection()
         {
-            UdpClient udpClient = new UdpClient();
+            udpClient = new UdpClient();
             bool isConnectionStarted = true;
+            Console.WriteLine("Connection started: " + isConnectionStarted);
+        }
+
+        private static void closeConnection() {
+            udpClient.Close();
         }
 
         private static void startScreenDisplay()
@@ -46,9 +52,8 @@ namespace Messeaging_app
             Console.WriteLine("[1] - Start Connection");
             Console.WriteLine("[2] - View Contantcs list");
             Console.Write("Choose: ");
-
-
         }
+
         private static void choiceHandling()
         {
             int choice = int.Parse(Console.ReadLine());
