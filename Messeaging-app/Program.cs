@@ -11,6 +11,7 @@ namespace Messeaging_app
         static int recieverPort = 11000;
         static string recieverID = "daro";
         static bool pleaseLoopThis = true;
+        static bool isConnectionStarted = false;
 
         static void Main(string[] args)
         {
@@ -18,6 +19,7 @@ namespace Messeaging_app
             {
                 startScreenDisplay();
                 choiceHandling();
+                Console.Clear();    
             }
 
 
@@ -31,18 +33,39 @@ namespace Messeaging_app
             string messeage = Console.ReadLine();
             byte[] data = Encoding.ASCII.GetBytes(messeage);
             udpClient.Send(data, data.Length, ipAddress, recieverPort);
+            Console.WriteLine("Messeage sent!");
+            Console.ReadKey();
+            Console.WriteLine("Press any key to continue");
             pleaseLoopThis = true;
+            
         }
 
         private static void startConnection()
         {
             udpClient = new UdpClient();
-            bool isConnectionStarted = true;
+            isConnectionStarted = true;
             Console.WriteLine("Connection started: " + isConnectionStarted);
         }
 
         private static void closeConnection() {
-            udpClient.Close();
+            if (!isConnectionStarted) 
+            {
+                Console.WriteLine("There is no connection to close!");
+
+            }
+            else
+            {
+                udpClient.Close();
+                isConnectionStarted = false;
+
+                Console.WriteLine($"Connection closed!");
+
+                if (isConnectionStarted = false)
+                {
+                    Console.WriteLine($"Connection status: closed");
+                }
+            }
+
         }
 
         private static void startScreenDisplay()
@@ -51,6 +74,8 @@ namespace Messeaging_app
             Console.WriteLine("Options: ");
             Console.WriteLine("[1] - Start Connection");
             Console.WriteLine("[2] - View Contantcs list");
+            Console.WriteLine("[3] - View Connection status");
+            Console.WriteLine("[4] - Close existing connection");
             Console.Write("Choose: ");
         }
 
@@ -66,7 +91,31 @@ namespace Messeaging_app
             else if (choice == 2)
             {
                 Console.WriteLine("This is under construction sir. ");
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
                 pleaseLoopThis = true;
+            }
+            else if (choice == 3)
+            {
+                string connectionClosed = "Closed";
+                string connectionOpened = "Opened";
+
+                if (isConnectionStarted)
+                {
+                    Console.WriteLine($"Connection status: {connectionOpened}");
+                }
+                else
+                {
+                    Console.WriteLine($"Connection status:  {connectionClosed}");
+                }
+                Console.ReadKey();
+
+            }
+            else if (choice == 4) 
+            {
+                closeConnection();
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
             }
         }
     }
