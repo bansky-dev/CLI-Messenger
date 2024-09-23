@@ -9,7 +9,6 @@ namespace Messeaging_app
         static UdpClient udpClient;
         static string ipAddress = "192.168.1.1";
         static int recieverPort = 11000;
-        static string recieverID = "daro";
         static bool pleaseLoopThis = true;
         static bool isConnectionStarted = false;
 
@@ -19,53 +18,81 @@ namespace Messeaging_app
             {
                 startScreenDisplay();
                 choiceHandling();
-                Console.Clear();    
+                Console.Clear();
             }
-
-
-
-
         }
+
+        //TODO: App is kind of finished but recieving and sending messeages needs total rework, probably rewrite from scratch.  
 
         private static void sendMesseage()
         {
-            Console.Write("Inser your messeage here: ");
-            string messeage = Console.ReadLine();
-            byte[] data = Encoding.ASCII.GetBytes(messeage);
-            udpClient.Send(data, data.Length, ipAddress, recieverPort);
-            Console.WriteLine("Messeage sent!");
-            Console.ReadKey();
-            Console.WriteLine("Press any key to continue");
-            pleaseLoopThis = true;
-            
+            try
+            {
+                Console.Write("Inser your messeage here: ");
+                string messeage = Console.ReadLine();
+                byte[] data = Encoding.ASCII.GetBytes(messeage);
+                udpClient.Send(data, data.Length, ipAddress, recieverPort);
+                Console.WriteLine("Messeage sent!");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+                pleaseLoopThis = true;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("An error occured! Press any key to continue");
+                Console.ReadKey();
+            }
+
         }
 
         private static void startConnection()
         {
-            udpClient = new UdpClient();
-            isConnectionStarted = true;
-            Console.WriteLine("Connection started: " + isConnectionStarted);
+            try
+            {
+                udpClient = new UdpClient();
+                isConnectionStarted = true;
+                Console.WriteLine("Connection started: " + isConnectionStarted);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("An error occured! Press any key to continue");
+                Console.ReadKey();
+            }
+
         }
 
-        private static void closeConnection() {
-            if (!isConnectionStarted) 
+        private static void closeConnection()
+        {
+            if (!isConnectionStarted)
             {
                 Console.WriteLine("There is no connection to close!");
 
             }
             else
             {
-                udpClient.Close();
-                isConnectionStarted = false;
-
-                Console.WriteLine($"Connection closed!");
-
-                if (isConnectionStarted = false)
+                try
                 {
-                    Console.WriteLine($"Connection status: closed");
-                }
-            }
+                    udpClient.Close();
+                    isConnectionStarted = false;
 
+                    Console.WriteLine($"Connection closed!");
+
+                    if (isConnectionStarted = false)
+                    {
+                        Console.WriteLine($"Connection status: closed");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("An error occured! Press any key to continue");
+                    Console.ReadKey();
+                }
+
+            }
         }
 
         private static void startScreenDisplay()
@@ -81,41 +108,51 @@ namespace Messeaging_app
 
         private static void choiceHandling()
         {
-            int choice = int.Parse(Console.ReadLine());
-            if (choice == 1)
+            try
             {
-                startConnection();
-                pleaseLoopThis = false;
-                sendMesseage();
-            }
-            else if (choice == 2)
-            {
-                Console.WriteLine("This is under construction sir. ");
-                Console.WriteLine("Press any key to continue");
-                Console.ReadKey();
-                pleaseLoopThis = true;
-            }
-            else if (choice == 3)
-            {
-                string connectionClosed = "Closed";
-                string connectionOpened = "Opened";
-
-                if (isConnectionStarted)
+                int choice = int.Parse(Console.ReadLine());
+                if (choice == 1)
                 {
-                    Console.WriteLine($"Connection status: {connectionOpened}");
+                    startConnection();
+                    pleaseLoopThis = false;
+                    sendMesseage();
                 }
-                else
+                else if (choice == 2)
                 {
-                    Console.WriteLine($"Connection status:  {connectionClosed}");
+                    Console.WriteLine("This is under construction sir. ");
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
+                    pleaseLoopThis = true;
                 }
+                else if (choice == 3)
+                {
+                    string connectionClosed = "Closed";
+                    string connectionOpened = "Opened";
+
+                    if (isConnectionStarted)
+                    {
+                        Console.WriteLine($"Connection status: {connectionOpened}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Connection status:  {connectionClosed}");
+                    }
+                    Console.ReadKey();
+
+                }
+                else if (choice == 4)
+                {
+                    closeConnection();
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("An error occured! Press any key to continue");
                 Console.ReadKey();
 
-            }
-            else if (choice == 4) 
-            {
-                closeConnection();
-                Console.WriteLine("Press any key to continue");
-                Console.ReadKey();
             }
         }
     }
